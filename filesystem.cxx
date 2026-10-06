@@ -4,17 +4,17 @@
 #include <vector>
 #include "filetype.hxx"
 
-std::vector<std::pair<Filetype, std::string>> Filesystem::readCurrentPathContents()
+std::vector<std::pair<Filetype, std::filesystem::path>> Filesystem::readCurrentPathContents()
 {
-    std::vector<std::pair<Filetype, std::string>> dirContents;
+    std::vector<std::pair<Filetype, std::filesystem::path>> dirContents;
     for(auto& entry : std::filesystem::directory_iterator(currentPath))
     {
-        std::string filename = std::filesystem::absolute(entry.path());
+        std::filesystem::path filepath = std::filesystem::absolute(entry.path());
         if(entry.is_directory())
         {
-            dirContents.push_back(std::pair(Filetype::DIR, filename));
+            dirContents.push_back(std::pair(Filetype::DIR, filepath));
         } else {
-            dirContents.push_back(std::pair(Filetype::REGULAR_FILE, filename));
+            dirContents.push_back(std::pair(Filetype::REGULAR_FILE, filepath));
         }
     }
 
@@ -44,4 +44,9 @@ bool Filesystem::isDirPathValid(std::filesystem::path path)
         return true;
     }
     return false;
+}
+
+void Filesystem::setCurrentPathToParent()
+{
+    setCurrentPath(currentPath.parent_path());
 }

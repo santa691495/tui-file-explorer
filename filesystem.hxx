@@ -1,5 +1,4 @@
 #include <filesystem>
-#include <string>
 #include <utility>
 #include <vector>
 #include "filetype.hxx"
@@ -15,9 +14,10 @@ class Filesystem
 
     public:
 
-        std::vector<std::pair<Filetype, std::string>> readCurrentPathContents();
+        std::vector<std::pair<Filetype, std::filesystem::path>> readCurrentPathContents();
         bool setCurrentPath(std::filesystem::path currentPath);
         std::filesystem::path getCurrentPath();
+        void setCurrentPathToParent();
 
     private:
         bool isDirPathValid(std::filesystem::path path);

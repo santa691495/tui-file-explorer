@@ -46,7 +46,15 @@ int main (int argc, char* argv[])
 
         if(input == KEY_ENTER ||input == KEY_RIGHT ||input == 10)
         {
-            fsystem.setCurrentPath(display.getPathChosen());
+
+            if(display.isBackOptionChosen())
+            {
+                fsystem.setCurrentPathToParent();
+            } else
+            {
+                fsystem.setCurrentPath(display.getPathChosen());
+            }
+
             erase();
             display.printDirectoryContents(
                 fsystem.readCurrentPathContents(),
