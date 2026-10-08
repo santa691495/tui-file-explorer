@@ -7,7 +7,6 @@ int main (int argc, char* argv[])
 {
 
     initscr();
-    keypad(stdscr, TRUE);
     noecho();
 
     if(argc > 2)
@@ -39,10 +38,11 @@ int main (int argc, char* argv[])
         fsystem.readCurrentPathContents(),
         fsystem.getCurrentPath()
     );
+    display.refreshPad();
 
     while(true)
     {
-        int input = getch();
+        int input = display.listenForPadInput();
 
         if(input == KEY_ENTER ||input == KEY_RIGHT ||input == 10)
         {
@@ -55,25 +55,19 @@ int main (int argc, char* argv[])
                 fsystem.setCurrentPath(display.getPathChosen());
             }
 
-            erase();
+            display.erasePad();
             display.printDirectoryContents(
                 fsystem.readCurrentPathContents(),
                 fsystem.getCurrentPath()
             );
-            refresh();
         }
 
         display.changeScreenState(input);
-        refresh();
+        display.refreshPad();
     }
 
     clear();
     endwin();
-    //get path contents
-    // print to screen
-    // wait for input
-    // pass input to filesystem to change currentPath if
-        //  new path is passed
 
     return 0;
 }

@@ -6,47 +6,74 @@
 #include <vector>
 #include <utility>
 #include <filesystem>
+#include <algorithm>
+
+Display::Display()
+{
+    pad = newpad(500, 70);
+    keypad(pad, TRUE);
+}
+Display::~Display()
+{
+    delwin(pad);
+}
 
 void Display::printDirectoryContents(std::vector<std::pair<Filetype, std::filesystem::path>> directoryContents, std::filesystem::path currentPath)
 {
     mapLineNumToPath.clear();
-    std::string titleString = "<-[" + (std::string)currentPath + "]->\n";
-    mvprintw(0, 0, "%s", titleString.c_str());
 
-    std::string contentsString = "[BACK]\n";
+    std::string title = "<-[" + (std::string)currentPath + "]->\n\n";
+    std::string options = "[BACK]\n";
+
     int i = 0;
     for(auto &entry : directoryContents)
     {
         if(entry.first == Filetype::DIR)
         {
-            contentsString.append("[DIR] ").append((std::string)entry.second).append("\n");
+            options.append("[DIR] ").append((std::string)entry.second).append("\n");
         } else
         {
-            contentsString.append("[FILE] ").append((std::string)entry.second).append("\n");
+            options.append("[FILE] ").append((std::string)entry.second).append("\n");
         }
         mapLineNumToPath.insert({printPathLineNum + i, entry.second});
         i++;
     }
 
-    mvprintw(backOptionLineNum, 0, "%s", contentsString.c_str());
-    move(backOptionLineNum, 0);
+    std::string full = title + options;
+    padHeight = std::count(full.begin(), full.end(), '\n');
+
+    wprintw(pad, "%s", full.c_str());
+    wmove(pad, backOptionLineNum, 0);
 }
 
 void Display::changeScreenState(int input)
 {
-    int currentX;
-    int currentY;
+    int maxY;
+    int maxX;
 
-    getyx(stdscr, currentY, currentX);
+    getmaxyx(stdscr, maxY, maxX);
+    std::pair<int, int> cursorPos = getCurrentCursorPos();
     switch (input)
     {
         case KEY_UP:
-            if(currentY != backOptionLineNum)
-                move(currentY - 1, currentX);
+            if(cursorPos.first > backOptionLineNum)
+            {
+                wmove(pad, cursorPos.first - 1, cursorPos.second);
+                if(cursorPos.first - 1 < padRowOffset)
+                {
+                    padRowOffset--;
+                }
+            }
             break;
         case KEY_DOWN:
-            if(currentY != backOptionLineNum + mapLineNumToPath.size())
-                move(currentY + 1, currentX);
+            if(cursorPos.first < backOptionLineNum + mapLineNumToPath.size())
+            {
+                wmove(pad, cursorPos.first + 1, cursorPos.second);
+                if(cursorPos.first + 1 > padRowOffset + maxY - 1)
+                {
+                    padRowOffset++;
+                }
+            }
             break;
     }
 }
@@ -60,7 +87,7 @@ std::pair<int, int> Display::getCurrentCursorPos()
 {
     int currentY;
     int currentX;
-    getyx(stdscr, currentY, currentX);
+    getyx(pad, currentY, currentX);
     return std::pair<int, int>(currentY, currentX);
 }
 
@@ -76,4 +103,22 @@ bool Display::isBackOptionChosen()
         return true;
     }
     return false;
+}
+
+void Display::refreshPad()
+{
+    int maxY, maxX;
+    getmaxyx(stdscr, maxY, maxX);
+    prefresh(pad, padRowOffset, 0, 0, 0, maxY - 1, maxX - 1);
+}
+
+void Display::erasePad()
+{
+    werase(pad);
+}
+
+int Display::listenForPadInput()
+{
+    int input = wgetch(pad);
+    return input;
 }
