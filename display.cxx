@@ -6,11 +6,10 @@
 #include <vector>
 #include <utility>
 #include <filesystem>
-#include <algorithm>
 
 Display::Display()
 {
-    pad = newpad(500, 70);
+    pad = newpad(500, 200);
     keypad(pad, TRUE);
 }
 Display::~Display()
@@ -20,6 +19,7 @@ Display::~Display()
 
 void Display::printDirectoryContents(std::vector<std::pair<Filetype, std::filesystem::path>> directoryContents, std::filesystem::path currentPath)
 {
+    padRowOffset = 0;
     mapLineNumToPath.clear();
 
     std::string title = "<-[" + (std::string)currentPath + "]->\n\n";
@@ -28,19 +28,20 @@ void Display::printDirectoryContents(std::vector<std::pair<Filetype, std::filesy
     int i = 0;
     for(auto &entry : directoryContents)
     {
+        std::filesystem::path relToCurrentPath = std::filesystem::relative(entry.second, currentPath);
+
         if(entry.first == Filetype::DIR)
         {
-            options.append("[DIR] ").append((std::string)entry.second).append("\n");
+            options.append("[DIR] ").append((std::string)relToCurrentPath).append("\n");
         } else
         {
-            options.append("[FILE] ").append((std::string)entry.second).append("\n");
+            options.append("[FILE] ").append((std::string)relToCurrentPath).append("\n");
         }
         mapLineNumToPath.insert({printPathLineNum + i, entry.second});
         i++;
     }
 
     std::string full = title + options;
-    padHeight = std::count(full.begin(), full.end(), '\n');
 
     wprintw(pad, "%s", full.c_str());
     wmove(pad, backOptionLineNum, 0);

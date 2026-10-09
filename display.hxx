@@ -13,7 +13,6 @@ class Display {
 
     private:
         WINDOW* pad;
-        int padHeight;
         const int backOptionLineNum = 2;
         const int printPathLineNum = 3;
         int padRowOffset = 0;
