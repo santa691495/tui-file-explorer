@@ -1,13 +1,19 @@
 #include <filesystem>
 #include <vector>
 #include <string>
-#include "filetype.hxx"
 
 #ifndef FILESYSTEM_TYPES_HXX
 #define FILESYSTEM_TYPES_HXX
 
 namespace FilesystemTypes
 {
+    enum class Filetype
+    {
+        REGULAR_FILE,
+        DIR,
+        SYMLINK
+    };
+
     class Entry
     {
         private:
