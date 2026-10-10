@@ -1,11 +1,10 @@
 #include <filesystem>
-#include <utility>
-#include <vector>
-#include "filetype.hxx"
+#include "filesystemtypes.hxx"
 
 #ifndef FILESYSTEM_HXX
 #define FILESYSTEM_HXX
 
+//All paths must be stored as absolute and only made relative for display
 class Filesystem
 {
     private:
@@ -13,14 +12,11 @@ class Filesystem
         std::filesystem::path currentPath = "";
 
     public:
-
-        std::vector<std::pair<Filetype, std::filesystem::path>> readCurrentPathContents();
+        //*make separate object for this vector (like DirectoryContents)
+        const FilesystemTypes::DirContents readCurrentPathContents() const;
+        const std::filesystem::path getCurrentPath() const;
         bool setCurrentPath(std::filesystem::path currentPath);
-        std::filesystem::path getCurrentPath();
         void setCurrentPathToParent();
-
-    private:
-        bool isDirPathValid(std::filesystem::path path);
 };
 
 #endif

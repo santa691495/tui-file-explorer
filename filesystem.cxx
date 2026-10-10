@@ -1,29 +1,17 @@
 #include "filesystem.hxx"
+#include "filesystemtypes.hxx"
+#include "filesystemutils.hxx"
 #include <filesystem>
-#include <utility>
-#include <vector>
-#include "filetype.hxx"
 
-std::vector<std::pair<Filetype, std::filesystem::path>> Filesystem::readCurrentPathContents()
+//TODO: refactor to use the new DirContentes Object
+const FilesystemTypes::DirContents Filesystem::readCurrentPathContents() const
 {
-    std::vector<std::pair<Filetype, std::filesystem::path>> dirContents;
-    for(auto& entry : std::filesystem::directory_iterator(currentPath))
-    {
-        std::filesystem::path filepath = std::filesystem::absolute(entry.path());
-        if(entry.is_directory())
-        {
-            dirContents.push_back(std::pair(Filetype::DIR, filepath));
-        } else {
-            dirContents.push_back(std::pair(Filetype::REGULAR_FILE, filepath));
-        }
-    }
-
-    return dirContents;
+    return FilesystemUtils::generateDirContentsFromPath(currentPath);
 }
 
 //turns the path absolute and canonical
 bool Filesystem::setCurrentPath(std::filesystem::path currentPath){
-    if(!isDirPathValid(currentPath)){
+    if(!FilesystemUtils::isDirPathValid(currentPath)){
         return false;
     } else {
         this->currentPath = std::filesystem::canonical(std::filesystem::absolute(currentPath));
@@ -31,19 +19,9 @@ bool Filesystem::setCurrentPath(std::filesystem::path currentPath){
     }
 }
 
-std::filesystem::path Filesystem::getCurrentPath()
+const std::filesystem::path Filesystem::getCurrentPath() const
 {
     return currentPath;
-}
-
-bool Filesystem::isDirPathValid(std::filesystem::path path)
-{
-    std::filesystem::path absolute = std::filesystem::absolute(path);
-    if(std::filesystem::exists(absolute) && std::filesystem::is_directory(absolute))
-    {
-        return true;
-    }
-    return false;
 }
 
 void Filesystem::setCurrentPathToParent()

@@ -44,6 +44,8 @@ int main (int argc, char* argv[])
     {
         int input = display.listenForPadInput();
 
+        //check if '[BACK]' or a specific directory was chosen and refresh
+        //with new directory
         if(input == KEY_ENTER ||input == KEY_RIGHT ||input == 10)
         {
 
@@ -62,6 +64,7 @@ int main (int argc, char* argv[])
             );
         }
 
+        //*should probably move the refresh action here, within its own function
         display.changeScreenState(input);
         display.refreshPad();
     }

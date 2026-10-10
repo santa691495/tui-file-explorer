@@ -1,9 +1,8 @@
 #include "display.hxx"
-#include "filetype.hxx"
+#include "filesystemtypes.hxx"
 #include <map>
 #include <ncurses.h>
 #include <string>
-#include <vector>
 #include <utility>
 #include <filesystem>
 
@@ -17,27 +16,36 @@ Display::~Display()
     delwin(pad);
 }
 
-void Display::printDirectoryContents(std::vector<std::pair<Filetype, std::filesystem::path>> directoryContents, std::filesystem::path currentPath)
+//FIX
+void Display::printDirectoryContents(FilesystemTypes::DirContents dirContents, std::filesystem::path currentPath)
 {
     padRowOffset = 0;
     mapLineNumToPath.clear();
 
+    //* one accidental newline will break the entire tracking,
+    //redesign the tracking system (better) or create an explicit way
+    //to track the spacing.
     std::string title = "<-[" + (std::string)currentPath + "]->\n\n";
     std::string options = "[BACK]\n";
 
+    //*The printing must be determined by mapLineNumToPath, not
+    //printing it first then map it; this makes it dependent on the
+    //printing which is unreliable.
     int i = 0;
-    for(auto &entry : directoryContents)
+    for(FilesystemTypes::Entry entry: dirContents.getContents())
     {
-        std::filesystem::path relToCurrentPath = std::filesystem::relative(entry.second, currentPath);
+        std::string filename = entry.getPathFileNameAsStr();
 
-        if(entry.first == Filetype::DIR)
+        FilesystemTypes::Filetype type = entry.getFileType();
+        if(type == FilesystemTypes::Filetype::DIR)
         {
-            options.append("[DIR] ").append((std::string)relToCurrentPath).append("\n");
-        } else
+            options.append("[DIR]").append(filename).append("\n");
+        } else if(type == FilesystemTypes::Filetype::REGULAR_FILE)
         {
-            options.append("[FILE] ").append((std::string)relToCurrentPath).append("\n");
+            options.append("[FILE]").append(filename).append("\n");
         }
-        mapLineNumToPath.insert({printPathLineNum + i, entry.second});
+        //* unreliable
+        mapLineNumToPath.insert({printPathLineNum + i, entry.getPath()});
         i++;
     }
 
