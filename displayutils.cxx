@@ -2,6 +2,7 @@
 #include "filesystemtypes.hxx"
 #include <filesystem>
 #include <map>
+#include <ncurses.h>
 
 const std::map<int, std::filesystem::path> DisplayUtils::generateLineNumToPathMapping(
     int lineNumStart, FilesystemTypes::DirContents dirContents
@@ -16,4 +17,13 @@ const std::map<int, std::filesystem::path> DisplayUtils::generateLineNumToPathMa
     }
 
     return mapping;
+}
+
+
+std::pair<int, int> DisplayUtils::getCurrentCursorPos(WINDOW* window)
+{
+    int currentY;
+    int currentX;
+    getyx(window, currentY, currentX);
+    return std::pair<int, int>(currentY, currentX);
 }

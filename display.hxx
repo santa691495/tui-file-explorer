@@ -1,7 +1,6 @@
 #include <map>
 #include <ncurses.h>
 #include "filesystemtypes.hxx"
-#include <utility>
 #include <map>
 #include <filesystem>
 
@@ -29,7 +28,6 @@ class Display {
 
     public:
         void printDirectoryContents(FilesystemTypes::DirContents &dirContents, std::filesystem::path currentPath);
-        std::pair<int, int> getCurrentCursorPos();
         void refreshPad();
         void erasePad();
 

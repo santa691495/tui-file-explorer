@@ -1,5 +1,6 @@
 #include "display.hxx"
 #include "filesystemtypes.hxx"
+#include "displayutils.hxx"
 #include <map>
 #include <ncurses.h>
 #include <string>
@@ -56,14 +57,6 @@ void Display::printDirectoryContents(FilesystemTypes::DirContents &dirContents, 
     wmove(pad, cursorStartingLineNum, 0);
 }
 
-std::pair<int, int> Display::getCurrentCursorPos()
-{
-    int currentY;
-    int currentX;
-    getyx(pad, currentY, currentX);
-    return std::pair<int, int>(currentY, currentX);
-}
-
 void Display::refreshPad()
 {
     int maxY, maxX;
@@ -82,7 +75,7 @@ void Display::moveCursorDown(int input, std::map<int, std::filesystem::path> lin
     getmaxyx(stdscr, maxY, maxX);
 
     //TODO: explain the math here in simple terms
-    std::pair<int, int> cursorPos = getCurrentCursorPos();
+    std::pair<int, int> cursorPos = DisplayUtils::getCurrentCursorPos(pad);
     if(canCursorMoveDown(lineNumToPathMapping))
     {
         wmove(pad, cursorPos.first + 1, cursorPos.second);
@@ -92,7 +85,7 @@ void Display::moveCursorDown(int input, std::map<int, std::filesystem::path> lin
 
 void Display::moveCursorUp(int input)
 {
-    std::pair<int, int> cursorPos = getCurrentCursorPos();
+    std::pair<int, int> cursorPos = DisplayUtils::getCurrentCursorPos(pad);
     //TODO: explain the math here in simple terms
     if(canCursorMoveUp())
     {
@@ -108,7 +101,7 @@ void Display::resetPadRowOffset()
 
 void Display::adjustScrollOffsetDown()
 {
-    std::pair<int, int> cursorPos = getCurrentCursorPos();
+    std::pair<int, int> cursorPos = DisplayUtils::getCurrentCursorPos(pad);
     if(canPadScrollOffsetDown())
     {
         padRowOffset++;
@@ -117,7 +110,7 @@ void Display::adjustScrollOffsetDown()
 
 void Display::adjustScrollOffsetUp()
 {
-    std::pair<int, int> cursorPos = getCurrentCursorPos();
+    std::pair<int, int> cursorPos = DisplayUtils::getCurrentCursorPos(pad);
     if(canPadScrollOffsetUp())
     {
         padRowOffset--;
@@ -129,7 +122,7 @@ bool Display::canPadScrollOffsetDown()
     int maxY, maxX;
     getmaxyx(stdscr, maxY, maxX);
 
-    std::pair<int, int> cursorPos = getCurrentCursorPos();
+    std::pair<int, int> cursorPos = DisplayUtils::getCurrentCursorPos(pad);
     if(cursorPos.first + 1 > padRowOffset + maxY - 1)
     {
         return true;
@@ -139,7 +132,7 @@ bool Display::canPadScrollOffsetDown()
 
 bool Display::canPadScrollOffsetUp()
 {
-    std::pair<int, int> cursorPos = getCurrentCursorPos();
+    std::pair<int, int> cursorPos = DisplayUtils::getCurrentCursorPos(pad);
     if(cursorPos.first - 1 < padRowOffset)
     {
         return true;
@@ -149,7 +142,7 @@ bool Display::canPadScrollOffsetUp()
 
 bool Display::canCursorMoveDown(std::map<int, std::filesystem::path> lineNumToPathMapping)
 {
-    std::pair<int, int> cursorPos = getCurrentCursorPos();
+    std::pair<int, int> cursorPos = DisplayUtils::getCurrentCursorPos(pad);
     if(cursorPos.first < backOptionLineNum + lineNumToPathMapping.size())
     {
        return true;
@@ -159,7 +152,7 @@ bool Display::canCursorMoveDown(std::map<int, std::filesystem::path> lineNumToPa
 
 bool Display::canCursorMoveUp()
 {
-    std::pair<int, int> cursorPos = getCurrentCursorPos();
+    std::pair<int, int> cursorPos = DisplayUtils::getCurrentCursorPos(pad);
     if(cursorPos.first > backOptionLineNum)
     {
         return true;
