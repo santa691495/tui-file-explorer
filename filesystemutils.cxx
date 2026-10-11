@@ -19,13 +19,13 @@ const FilesystemTypes::DirContents generateDirContentsFromPath(fs::path basePath
     for(auto& entry : std::filesystem::directory_iterator(basePath))
     {
         std::filesystem::path entryPathAbs = std::filesystem::absolute(entry.path());
-        Filetype type;
+        FilesystemTypes::Filetype type;
         if(entry.is_directory())
         {
-            type = Filetype::DIR;
+            type = FilesystemTypes::Filetype::DIR;
         } else if(entry.is_regular_file())
         {
-            type = Filetype::REGULAR_FILE;
+            type = FilesystemTypes::Filetype::REGULAR_FILE;
         }
         contents.push_back(FilesystemTypes::Entry(entryPathAbs, type));
     }

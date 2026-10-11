@@ -3,7 +3,6 @@
 #include "filesystemutils.hxx"
 #include <filesystem>
 
-//TODO: refactor to use the new DirContentes Object
 const FilesystemTypes::DirContents Filesystem::readCurrentPathContents() const
 {
     return FilesystemUtils::generateDirContentsFromPath(currentPath);
