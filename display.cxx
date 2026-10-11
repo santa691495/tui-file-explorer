@@ -11,27 +11,21 @@ Display::Display()
     pad = newpad(500, 200);
     keypad(pad, TRUE);
 }
+
 Display::~Display()
 {
     delwin(pad);
 }
 
-//FIX
 void Display::printDirectoryContents(FilesystemTypes::DirContents dirContents, std::filesystem::path currentPath)
 {
+    //* put this in its own function in Display, for explicity
     padRowOffset = 0;
-    mapLineNumToPath.clear();
 
-    //* one accidental newline will break the entire tracking,
-    //redesign the tracking system (better) or create an explicit way
-    //to track the spacing.
-    std::string title = "<-[" + (std::string)currentPath + "]->\n\n";
-    std::string options = "[BACK]\n";
+    std::string titleStr = "<-[" + (std::string)currentPath + "]->";
+    std::string backOptionStr = "[BACK]";
+    std::string pathOptionsStr = "";
 
-    //*The printing must be determined by mapLineNumToPath, not
-    //printing it first then map it; this makes it dependent on the
-    //printing which is unreliable.
-    int i = 0;
     for(FilesystemTypes::Entry entry: dirContents.getContents())
     {
         std::string filename = entry.getPathFileNameAsStr();
@@ -39,23 +33,30 @@ void Display::printDirectoryContents(FilesystemTypes::DirContents dirContents, s
         FilesystemTypes::Filetype type = entry.getFileType();
         if(type == FilesystemTypes::Filetype::DIR)
         {
-            options.append("[DIR]").append(filename).append("\n");
+            pathOptionsStr.append("[DIR]").append(filename).append("\n");
         } else if(type == FilesystemTypes::Filetype::REGULAR_FILE)
         {
-            options.append("[FILE]").append(filename).append("\n");
+            pathOptionsStr.append("[FILE]").append(filename).append("\n");
         }
-        //* unreliable
-        mapLineNumToPath.insert({printPathLineNum + i, entry.getPath()});
-        i++;
     }
 
-    std::string full = title + options;
 
-    wprintw(pad, "%s", full.c_str());
+    //print the title, backoption, and path options to their
+    //designated lines
+    wmove(pad, titleLineNum, 0);
+    wprintw(pad, "%s", titleStr.c_str());
+
     wmove(pad, backOptionLineNum, 0);
+    wprintw(pad, "%s", backOptionStr.c_str());
+
+    wmove(pad, pathOptionsLineNumStart, 0);
+    wprintw(pad, "%s", pathOptionsStr.c_str());
+
+    //Put cursor on starting position after printing
+    wmove(pad, cursorStartingLineNum, 0);
 }
 
-void Display::changeScreenState(int input)
+void Display::changeScreenState(int input, std::map<int, std::filesystem::path> lineNumToPathMapping)
 {
     int maxY;
     int maxX;
@@ -64,6 +65,7 @@ void Display::changeScreenState(int input)
     std::pair<int, int> cursorPos = getCurrentCursorPos();
     switch (input)
     {
+        //* provide brief explanation for these
         case KEY_UP:
             if(cursorPos.first > backOptionLineNum)
             {
@@ -74,8 +76,9 @@ void Display::changeScreenState(int input)
                 }
             }
             break;
+        //* provide brief explanation for these
         case KEY_DOWN:
-            if(cursorPos.first < backOptionLineNum + mapLineNumToPath.size())
+            if(cursorPos.first < backOptionLineNum + lineNumToPathMapping.size())
             {
                 wmove(pad, cursorPos.first + 1, cursorPos.second);
                 if(cursorPos.first + 1 > padRowOffset + maxY - 1)
@@ -87,31 +90,12 @@ void Display::changeScreenState(int input)
     }
 }
 
-std::filesystem::path Display::matchPathByLineNum(int lineNum)
-{
-    return mapLineNumToPath.at(lineNum);
-}
-
 std::pair<int, int> Display::getCurrentCursorPos()
 {
     int currentY;
     int currentX;
     getyx(pad, currentY, currentX);
     return std::pair<int, int>(currentY, currentX);
-}
-
-std::filesystem::path Display::getPathChosen()
-{
-    return matchPathByLineNum(getCurrentCursorPos().first);
-}
-
-bool Display::isBackOptionChosen()
-{
-    if(getCurrentCursorPos().first == backOptionLineNum)
-    {
-        return true;
-    }
-    return false;
 }
 
 void Display::refreshPad()
@@ -124,10 +108,4 @@ void Display::refreshPad()
 void Display::erasePad()
 {
     werase(pad);
-}
-
-int Display::listenForPadInput()
-{
-    int input = wgetch(pad);
-    return input;
 }
