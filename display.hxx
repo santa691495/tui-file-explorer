@@ -18,11 +18,6 @@ class Display {
         const int cursorStartingLineNum = backOptionLineNum;
         int padRowOffset = 0;
 
-        //For the current path only. Resets the map only if current path is changed
-        //* mapping should probably be handled by something else
-        //* or not make the matching be dependent on printing
-        //  (i.e. create mapping first then print, not the other way around)
-
     public:
         //Only called when current path is changed
         //*should be in its own function along with the erase operation in changeScreenState

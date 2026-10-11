@@ -1,6 +1,5 @@
 #include <filesystem>
 #include <vector>
-#include "filetype.hxx"
 #include "filesystemtypes.hxx"
 
 namespace fs = std::filesystem;
@@ -29,7 +28,7 @@ std::string FilesystemTypes::Entry::getPathFileNameAsStr() const
     return std::string(filename);
 }
 
-const Filetype FilesystemTypes::Entry::getFileType() const
+const FilesystemTypes::Filetype FilesystemTypes::Entry::getFileType() const
 {
     return entry.second;
 }
