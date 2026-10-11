@@ -18,14 +18,23 @@ class Display {
         const int cursorStartingLineNum = backOptionLineNum;
         int padRowOffset = 0;
 
+    private:
+        void resetPadRowOffset();
+        void adjustScrollOffsetUp();
+        void adjustScrollOffsetDown();
+        bool canPadScrollOffsetDown();
+        bool canPadScrollOffsetUp();
+        bool canCursorMoveUp();
+        bool canCursorMoveDown(std::map<int, std::filesystem::path> lineNumToPathMapping);
+
     public:
-        //Only called when current path is changed
-        //*should be in its own function along with the erase operation in changeScreenState
-        void printDirectoryContents(FilesystemTypes::DirContents dirContents, std::filesystem::path currentPath);
-        void changeScreenState(int input, std::map<int, std::filesystem::path> lineNumToPathMapping);
+        void printDirectoryContents(FilesystemTypes::DirContents &dirContents, std::filesystem::path currentPath);
         std::pair<int, int> getCurrentCursorPos();
         void refreshPad();
         void erasePad();
+
+        void moveCursorDown(int input, std::map<int, std::filesystem::path> lineNumToPathMapping);
+        void moveCursorUp(int input);
 
         Display();
         ~Display();
