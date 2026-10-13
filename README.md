@@ -16,10 +16,23 @@ to view more files for big directories. CTRL + C to stop program.
 - **CMake** for build automation
 
 ## Build & Run
+*Note: Only works for Linux*
+
 ### Dependencies
+**Debain/Ubuntu**
+*Install Ncurses library:* `sudo apt install libncurses-dev`  
+*Install CMake:* `sudo apt install cmake`
+
+**Fedora/RHEL**
+*Install Ncurses library:* `sudo dnf install ncurses-devel`  
+*Install CMake:* `sudo dnf install cmake`
+
+**Arch**
+*Install Ncurses library:* `sudo pacman -S ncurses`  
+*Install CMake:* `sudo pacman -S cmake`
 
 ### Build
-**Go to project root:** `cd file-manager`
-**Create build directory:** `mkdir build/`
-**Generate build system:** `cmake -S . -B build/ -G "Unix Makefiles" #Or generator of your choice`
-**Run:** `./build/file-mgr-app ~ #Or other paths`
+1. **Go to project root:** `cd file-manager`
+2. **Create build directory:** `mkdir build/`
+3. **Generate build system:** `cmake -S . -B build/ -G "Unix Makefiles" #Or generator of your choice`
+4. **Run:** `./build/file-mgr-app ~ #Or other paths`
