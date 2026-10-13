@@ -1,0 +1,50 @@
+[
+{
+  "directory": "/home/dingdongx64/Projects/pet-projects/file-manager/build",
+  "command": "/usr/bin/c++  -I/home/dingdongx64/Projects/pet-projects/file-manager/filesystem -I/home/dingdongx64/Projects/pet-projects/file-manager/display -I/home/dingdongx64/Projects/pet-projects/file-manager/input -I/home/dingdongx64/Projects/pet-projects/file-manager/eventlistener -std=gnu++17 -o CMakeFiles/file-mgr-app.dir/main.cxx.o -c /home/dingdongx64/Projects/pet-projects/file-manager/main.cxx",
+  "file": "/home/dingdongx64/Projects/pet-projects/file-manager/main.cxx",
+  "output": "CMakeFiles/file-mgr-app.dir/main.cxx.o"
+},
+{
+  "directory": "/home/dingdongx64/Projects/pet-projects/file-manager/build/filesystem",
+  "command": "/usr/bin/c++  -I/home/dingdongx64/Projects/pet-projects/file-manager/filesystem -std=gnu++17 -o CMakeFiles/filesystemTypes.dir/filesystemtypes.cxx.o -c /home/dingdongx64/Projects/pet-projects/file-manager/filesystem/filesystemtypes.cxx",
+  "file": "/home/dingdongx64/Projects/pet-projects/file-manager/filesystem/filesystemtypes.cxx",
+  "output": "filesystem/CMakeFiles/filesystemTypes.dir/filesystemtypes.cxx.o"
+},
+{
+  "directory": "/home/dingdongx64/Projects/pet-projects/file-manager/build/filesystem",
+  "command": "/usr/bin/c++  -I/home/dingdongx64/Projects/pet-projects/file-manager/filesystem -std=gnu++17 -o CMakeFiles/filesystemUtils.dir/filesystemutils.cxx.o -c /home/dingdongx64/Projects/pet-projects/file-manager/filesystem/filesystemutils.cxx",
+  "file": "/home/dingdongx64/Projects/pet-projects/file-manager/filesystem/filesystemutils.cxx",
+  "output": "filesystem/CMakeFiles/filesystemUtils.dir/filesystemutils.cxx.o"
+},
+{
+  "directory": "/home/dingdongx64/Projects/pet-projects/file-manager/build/filesystem",
+  "command": "/usr/bin/c++  -I/home/dingdongx64/Projects/pet-projects/file-manager/filesystem -std=gnu++17 -o CMakeFiles/filesystem.dir/filesystem.cxx.o -c /home/dingdongx64/Projects/pet-projects/file-manager/filesystem/filesystem.cxx",
+  "file": "/home/dingdongx64/Projects/pet-projects/file-manager/filesystem/filesystem.cxx",
+  "output": "filesystem/CMakeFiles/filesystem.dir/filesystem.cxx.o"
+},
+{
+  "directory": "/home/dingdongx64/Projects/pet-projects/file-manager/build/display",
+  "command": "/usr/bin/c++  -I/home/dingdongx64/Projects/pet-projects/file-manager/display -I/home/dingdongx64/Projects/pet-projects/file-manager/filesystem -std=gnu++17 -o CMakeFiles/displayUtils.dir/displayutils.cxx.o -c /home/dingdongx64/Projects/pet-projects/file-manager/display/displayutils.cxx",
+  "file": "/home/dingdongx64/Projects/pet-projects/file-manager/display/displayutils.cxx",
+  "output": "display/CMakeFiles/displayUtils.dir/displayutils.cxx.o"
+},
+{
+  "directory": "/home/dingdongx64/Projects/pet-projects/file-manager/build/display",
+  "command": "/usr/bin/c++  -I/home/dingdongx64/Projects/pet-projects/file-manager/display -I/home/dingdongx64/Projects/pet-projects/file-manager/filesystem -std=gnu++17 -o CMakeFiles/display.dir/display.cxx.o -c /home/dingdongx64/Projects/pet-projects/file-manager/display/display.cxx",
+  "file": "/home/dingdongx64/Projects/pet-projects/file-manager/display/display.cxx",
+  "output": "display/CMakeFiles/display.dir/display.cxx.o"
+},
+{
+  "directory": "/home/dingdongx64/Projects/pet-projects/file-manager/build/input",
+  "command": "/usr/bin/c++  -I/home/dingdongx64/Projects/pet-projects/file-manager/input -std=gnu++17 -o CMakeFiles/input.dir/input.cxx.o -c /home/dingdongx64/Projects/pet-projects/file-manager/input/input.cxx",
+  "file": "/home/dingdongx64/Projects/pet-projects/file-manager/input/input.cxx",
+  "output": "input/CMakeFiles/input.dir/input.cxx.o"
+},
+{
+  "directory": "/home/dingdongx64/Projects/pet-projects/file-manager/build/eventlistener",
+  "command": "/usr/bin/c++  -I/home/dingdongx64/Projects/pet-projects/file-manager/eventlistener -std=gnu++17 -o CMakeFiles/eventlistener.dir/eventlistener.cxx.o -c /home/dingdongx64/Projects/pet-projects/file-manager/eventlistener/eventlistener.cxx",
+  "file": "/home/dingdongx64/Projects/pet-projects/file-manager/eventlistener/eventlistener.cxx",
+  "output": "eventlistener/CMakeFiles/eventlistener.dir/eventlistener.cxx.o"
+}
+]

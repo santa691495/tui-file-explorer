@@ -1,0 +1,2 @@
+/usr/bin/ar qc libeventlistener.a CMakeFiles/eventlistener.dir/eventlistener.cxx.o
+/usr/bin/ranlib libeventlistener.a

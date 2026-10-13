@@ -1,0 +1,11 @@
+{
+	"InstallScripts" : 
+	[
+		"/home/dingdongx64/Projects/pet-projects/file-manager/build/cmake_install.cmake",
+		"/home/dingdongx64/Projects/pet-projects/file-manager/build/filesystem/cmake_install.cmake",
+		"/home/dingdongx64/Projects/pet-projects/file-manager/build/display/cmake_install.cmake",
+		"/home/dingdongx64/Projects/pet-projects/file-manager/build/input/cmake_install.cmake",
+		"/home/dingdongx64/Projects/pet-projects/file-manager/build/eventlistener/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

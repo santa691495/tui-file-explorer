@@ -1,0 +1,2 @@
+/usr/bin/ar qc libfilesystemUtils.a CMakeFiles/filesystemUtils.dir/filesystemutils.cxx.o
+/usr/bin/ranlib libfilesystemUtils.a

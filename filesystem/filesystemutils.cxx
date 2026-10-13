@@ -1,5 +1,6 @@
 #include <filesystem>
 #include "filesystemutils.hxx"
+#include "filesystemtypes.hxx"
 
 namespace fs = std::filesystem;
 
@@ -13,7 +14,7 @@ bool FilesystemUtils::isDirPathValid(fs::path path)
     return false;
 }
 
-const FilesystemTypes::DirContents generateDirContentsFromPath(fs::path basePath)
+const FilesystemTypes::DirContents FilesystemUtils::generateDirContentsFromPath(fs::path basePath)
 {
     std::vector<FilesystemTypes::Entry> contents;
     for(auto& entry : std::filesystem::directory_iterator(basePath))
