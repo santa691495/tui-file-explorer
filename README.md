@@ -32,7 +32,7 @@ to view more files for big directories. CTRL + C to stop program.
 *Install CMake:* `sudo pacman -S cmake`
 
 ### Build
-1. **Go to project root:** `cd file-manager`
+1. **Go to project root:** `cd tui-file-explorer`
 2. **Create build directory:** `mkdir build/`
 3. **Generate build system:** `cmake -S . -B build/ -G "Unix Makefiles" #Or generator of your choice`
 4. **Run:** `./build/file-mgr-app ~ #Or other paths`
