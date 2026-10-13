@@ -8,7 +8,6 @@
 #include "display.hxx"
 #include <ncurses.h>
 #include <stdio.h>
-//TODO:
 int main (int argc, char* argv[])
 {
 
@@ -19,12 +18,12 @@ int main (int argc, char* argv[])
     {
         clear();
         endwin();
-        printf("Too many arguments. Usage: file-mgr <path>\n");
+        printf("Too many arguments. Usage: file-mgr-app <path>\n");
         return -1;
     } else if(argc == 1){
         clear();
         endwin();
-        printf("Usage: file-mgr <path>\n");
+        printf("Usage: file-mgr-app <path>\n");
         return -1;
     }
 
@@ -33,7 +32,6 @@ int main (int argc, char* argv[])
     Input inputListener;
     EventListener eventListener;
 
-    //use FilesystemUtils::isDirValid()
     if(!fsystem.setCurrentPath(argv[1]))
     {
         clear();
