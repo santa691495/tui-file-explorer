@@ -1,8 +1,14 @@
 #include "filesystem.hxx"
+#include "filesystemtypes.hxx"
+#include "filesystemutils.hxx"
+#include "input.hxx"
+#include "eventlistener.hxx"
+#include "displaytypes.hxx"
+#include "displayutils.hxx"
 #include "display.hxx"
 #include <ncurses.h>
 #include <stdio.h>
-
+//TODO:
 int main (int argc, char* argv[])
 {
 
@@ -24,7 +30,10 @@ int main (int argc, char* argv[])
 
     Filesystem fsystem;
     Display display;
+    Input inputListener;
+    EventListener eventListener;
 
+    //use FilesystemUtils::isDirValid()
     if(!fsystem.setCurrentPath(argv[1]))
     {
         clear();
@@ -34,39 +43,53 @@ int main (int argc, char* argv[])
     }
 
     //print initial
-    display.printDirectoryContents(
-        fsystem.readCurrentPathContents(),
-        fsystem.getCurrentPath()
-    );
+    FilesystemTypes::DirContents initDirContents = FilesystemUtils::generateDirContentsFromPath(fsystem.getCurrentPath());
+    display.printDirectoryContents(initDirContents, fsystem.getCurrentPath());
     display.refreshPad();
+
+    eventListener.mapKeyToEvent(KEY_UP, [&]()-> void {
+        display.moveCursorUp();
+        display.refreshPad();
+    });
+
+    eventListener.mapKeyToEvent(KEY_DOWN, [&]()-> void {
+        FilesystemTypes::DirContents currentDirContents = FilesystemUtils::generateDirContentsFromPath(fsystem.getCurrentPath());
+        display.moveCursorDown(currentDirContents);
+        display.refreshPad();
+    });
+
+    eventListener.mapKeyToEvent(KEY_RIGHT, [&]()-> void {
+        if(display.isCursorAtOptionType(DisplayTypes::Options::BACK))
+        {
+            fsystem.setCurrentPathToParent();
+        } else if(display.isCursorAtOptionType(DisplayTypes::Options::PATH))
+        {
+            //*Retrieve the chosen path by getting the line where the cursor was last pointing at
+            //during KEY_RIGHT press event, after generating a line-number-to-filepath map.
+
+            FilesystemTypes::DirContents currentDirContents = FilesystemUtils::generateDirContentsFromPath(fsystem.getCurrentPath());
+            int startLineNum = display.getStartLineNumForOptionType(DisplayTypes::Options::PATH);
+
+            std::map<int, std::filesystem::path> lineNumToPathMapping = DisplayUtils::generateLineNumToPathMapping(
+                startLineNum, currentDirContents
+            );
+
+            std::pair<int, int> lastCursorPos = DisplayUtils::getCurrentCursorPos(display.getPad());
+            std::filesystem::path pathChosen = lineNumToPathMapping.at(lastCursorPos.first);
+
+            fsystem.setCurrentPath(pathChosen);
+        }
+
+        FilesystemTypes::DirContents newDirContents = FilesystemUtils::generateDirContentsFromPath(fsystem.getCurrentPath());
+        display.erasePad();
+        display.printDirectoryContents(newDirContents, fsystem.getCurrentPath());
+        display.refreshPad();
+    });
 
     while(true)
     {
-        int input = display.listenForPadInput();
-
-        //check if '[BACK]' or a specific directory was chosen and refresh
-        //with new directory
-        if(input == KEY_ENTER ||input == KEY_RIGHT ||input == 10)
-        {
-
-            if(display.isBackOptionChosen())
-            {
-                fsystem.setCurrentPathToParent();
-            } else
-            {
-                fsystem.setCurrentPath(display.getPathChosen());
-            }
-
-            display.erasePad();
-            display.printDirectoryContents(
-                fsystem.readCurrentPathContents(),
-                fsystem.getCurrentPath()
-            );
-        }
-
-        //*should probably move the refresh action here, within its own function
-        display.changeScreenState(input);
-        display.refreshPad();
+        int input = inputListener.listenForPadInput(display.getPad());
+        eventListener.registerForInput(input);
     }
 
     clear();
