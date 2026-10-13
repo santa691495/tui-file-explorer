@@ -174,11 +174,11 @@ bool Display::isCursorAtOptionType(DisplayTypes::Options optionType)
     switch (optionType)
     {
         case DisplayTypes::Options::BACK :
-            if(backOptionLineNum == cursorPos.first) return true;
+            if(cursorPos.first == backOptionLineNum) return true;
             return false;
             break;
         case DisplayTypes::Options::PATH :
-            if(pathOptionsLineNumStart == cursorPos.first) return true;
+            if(cursorPos.first >= pathOptionsLineNumStart) return true;
             return false;
             break;
         default:
