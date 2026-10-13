@@ -1,7 +1,7 @@
 #include <map>
+#include "displaytypes.hxx"
 #include <ncurses.h>
 #include "filesystemtypes.hxx"
-#include <map>
 #include <filesystem>
 
 #ifndef DISPLAY_HXX
@@ -31,8 +31,13 @@ class Display {
         void refreshPad();
         void erasePad();
 
-        void moveCursorDown(int input, std::map<int, std::filesystem::path> lineNumToPathMapping);
-        void moveCursorUp(int input);
+        bool isCursorAtOptionType(DisplayTypes::Options optionType);
+
+        void moveCursorDown(FilesystemTypes::DirContents dirContents);
+        void moveCursorUp();
+
+        int getStartLineNumForOptionType(DisplayTypes::Options optionType);
+        WINDOW* getPad() const;
 
         Display();
         ~Display();

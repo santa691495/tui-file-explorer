@@ -1,4 +1,5 @@
 #include "display.hxx"
+#include "displaytypes.hxx"
 #include "filesystemtypes.hxx"
 #include "displayutils.hxx"
 #include <map>
@@ -69,11 +70,13 @@ void Display::erasePad()
     werase(pad);
 }
 
-void Display::moveCursorDown(int input, std::map<int, std::filesystem::path> lineNumToPathMapping)
+void Display::moveCursorDown(FilesystemTypes::DirContents dirContents)
 {
     int maxY, maxX;
     getmaxyx(stdscr, maxY, maxX);
 
+    //*Should this really be generated here?
+    std::map<int, std::filesystem::path> lineNumToPathMapping = DisplayUtils::generateLineNumToPathMapping(pathOptionsLineNumStart, dirContents);
     //TODO: explain the math here in simple terms
     std::pair<int, int> cursorPos = DisplayUtils::getCurrentCursorPos(pad);
     if(canCursorMoveDown(lineNumToPathMapping))
@@ -83,7 +86,7 @@ void Display::moveCursorDown(int input, std::map<int, std::filesystem::path> lin
     }
 }
 
-void Display::moveCursorUp(int input)
+void Display::moveCursorUp()
 {
     std::pair<int, int> cursorPos = DisplayUtils::getCurrentCursorPos(pad);
     //TODO: explain the math here in simple terms
@@ -158,4 +161,44 @@ bool Display::canCursorMoveUp()
         return true;
     }
     return false;
+}
+
+WINDOW* Display::getPad() const
+{
+    return pad;
+}
+
+bool Display::isCursorAtOptionType(DisplayTypes::Options optionType)
+{
+    std::pair<int, int> cursorPos = DisplayUtils::getCurrentCursorPos(pad);
+    switch (optionType)
+    {
+        case DisplayTypes::Options::BACK :
+            if(backOptionLineNum == cursorPos.first) return true;
+            return false;
+            break;
+        case DisplayTypes::Options::PATH :
+            if(pathOptionsLineNumStart == cursorPos.first) return true;
+            return false;
+            break;
+        default:
+            return false;
+            break;
+    }
+}
+
+int Display::getStartLineNumForOptionType(DisplayTypes::Options optionType)
+{
+    switch (optionType)
+    {
+        case DisplayTypes::Options::BACK :
+            return backOptionLineNum;
+            break;
+        case DisplayTypes::Options::PATH :
+            return pathOptionsLineNumStart;
+            break;
+        default:
+            return -1;
+            break;
+    }
 }
